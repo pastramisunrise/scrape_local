@@ -14,7 +14,13 @@ def google_api():
     googlenews.setperiod("30d")
     googlenews.setencode("utf-8")
     googlenews.search("Philadelphia AND ((Store OR Business) AND (Opening OR New))")
-    print(googlenews.gettext())
+    result = googlenews.result()
+    for r in result:
+        title = r["title"]
+        link = r["link"]
+        date = r["date"]
+        print(date)
+        desc = r["desc"]
 
 # Patch.com web scraping
 def patch_scrap():
@@ -29,16 +35,16 @@ def patch_scrap():
     for c in cards:
         date = datetime.datetime.strptime(c.find("time")["datetime"], "%Y-%m-%dT%H:%M:%SZ")
         if date > start_date:
-        # Get title
-        title = c.find("a")
-        # link = title["href"]
-        # title = title.text
-        # Get description
-        desc = c.find("p")
-        # print(desc.text)
+            # Get title
+            title = c.find("a")
+            # link = title["href"]
+            # title = title.text
+            # Get description
+            desc = c.find("p")
+            # print(desc.text)
 
 # 2. Check if items are already in the local database
-def check_item(item):
+# def check_item(item):
     # Connect to DB
     # Create DB
     # Create table
@@ -51,3 +57,7 @@ def check_item(item):
 # 4. Add matching items to DB
 
 # 5. Find lead info
+
+if __name__ == "__main__":
+    google_api()
+    pass
