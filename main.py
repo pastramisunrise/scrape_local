@@ -29,6 +29,8 @@ def convert_gdate(gdate):
     #   "hour":"","hours","","day":"","days":"","week","",
     #   "weeks":"","month":""
     # }
+    # now = datetime.datetime.now()
+    # new_date = now - relativedelta(days = 30)
     # new_date = datetime.datetime.strptime()
     # return new_date
     pass
