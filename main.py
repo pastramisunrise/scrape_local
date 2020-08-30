@@ -19,8 +19,19 @@ def google_api():
         title = r["title"]
         link = r["link"]
         date = r["date"]
-        print(date)
         desc = r["desc"]
+        # Convert date string to datetime
+        new_date = convert_gdate(date)
+
+def convert_gdate(gdate):
+    # d_unit = {
+    #   "second":"","seconds":"","minute":"","minutes":"",
+    #   "hour":"","hours","","day":"","days":"","week","",
+    #   "weeks":"","month":""
+    # }
+    # new_date = datetime.datetime.strptime()
+    # return new_date
+    pass
 
 # Patch.com web scraping
 def patch_scrap():
@@ -42,6 +53,11 @@ def patch_scrap():
             # Get description
             desc = c.find("p")
             # print(desc.text)
+
+# Future Iterations
+# 1. Check Craigslist for computer gigs
+# 2. Check Craigslist all jobs at newly opening businesses
+# 3. Check social media for mentions of new businesses
 
 # 2. Check if items are already in the local database
 # def check_item(item):
