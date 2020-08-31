@@ -20,20 +20,6 @@ def google_api():
         link = r["link"]
         date = r["date"]
         desc = r["desc"]
-        # Convert date string to datetime
-        new_date = convert_gdate(date)
-
-def convert_gdate(gdate):
-    # d_unit = {
-    #   "second":"","seconds":"","minute":"","minutes":"",
-    #   "hour":"","hours","","day":"","days":"","week","",
-    #   "weeks":"","month":""
-    # }
-    # now = datetime.datetime.now()
-    # new_date = now - relativedelta(days = 30)
-    # new_date = datetime.datetime.strptime()
-    # return new_date
-    pass
 
 # Patch.com web scraping
 def patch_scrap():
