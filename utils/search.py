@@ -1,53 +1,30 @@
 import datetime
-from dateutil.relativedelta import relativedelta
 import requests
-import re
-from bs4 import BeautifulSoup
-from GoogleNews import GoogleNews
-from utils.news_item import Item
+import json
+from utils.business import Business
 
 class Search():
 
-    # 1. Get local news items
+    def __init__(self):
+        self.now = datetime.datetime.now()
+        print("Search starting...")
 
-    # Google News Search
-    def google_api(self):
-        now = datetime.datetime.now()
-        googlenews = GoogleNews()
-        googlenews.setlang("en")
-        googlenews.setperiod("30d")
-        googlenews.setencode("utf-8")
-        googlenews.search("Philadelphia AND ((Store OR Business) AND (Opening OR New))")
-        result = googlenews.result()
-        for r in result:
-            item = Item([r["title"],r["desc"],r["link"],r["date"],now])
-            item.check_item()
+    # Query table
+    def query_tables(self):
+        bl_url = "https://phl.carto.com/api/v2/sql?q=SELECT * FROM business_licenses WHERE mostrecentissuedate > now() - interval '1 month'"
+        cal_url = "https://phl.carto.com/api/v2/sql?q=SELECT * FROM com_act_licenses WHERE issuedate > now() - interval '1 month'"
+        tables = {"business_licenses" : bl_url, "commercial_activity_license" : cal_url}
 
-    # Patch.com web scraping
-    def patch_scrap(self):
-        now = datetime.datetime.now()
-        page = requests.get("https://patch.com/pennsylvania/philadelphia/business")
-        soup = BeautifulSoup(page.text, "html.parser")
-        regex = re.compile(".*styles_Card__Content__.*")
-        cards = soup.find_all("div", {"class":regex})
-        now = datetime.datetime.now()
-        start_date = now - relativedelta(days = 30)
-        for c in cards:
-            date = datetime.datetime.strptime(c.find("time")["datetime"], "%Y-%m-%dT%H:%M:%SZ")
-            if date > start_date:
-                title = c.find("a")
-                link = title["href"]
-                title = title.text
-                desc = c.find("p")
-                desc= desc.text
-                item = Item([title,desc,link,date,now])
-                item.check_item()
-
-    # Future Iterations
-    # 1. Check Craigslist for computer gigs
-    # 2. Check Craigslist all jobs at newly opening businesses
-    # 3. Check social media for mentions of new businesses
+        for tab in tables:
+            print("Downloading {} table".format(tab))
+            r = requests.get(tables[tab])
+            data = json.loads(r.text)
+            print("Checking {} table".format(tab))
+            for row in data["rows"]:
+                business = Business(row, tab)
+                search_result = business.find_bus()
+                if search_result:
+                    add_result = business.add_record()
+        print("Search complete")
         
-    # 4. Add matching items to DB
-
-    # 5. Find lead info
+    # Find lead info
