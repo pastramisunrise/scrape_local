@@ -2,7 +2,7 @@ import pymongo
 
 class Business():
 
-    def __init__(self, info = {}, table = ""):
+    def __init__(self, info, table):
         self.info = info
         self.table = table
         self.client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -17,3 +17,9 @@ class Business():
     def add_record(self):
         x = self.col.insert_one(self.info)
         return x.inserted_id
+
+    def get_sample(self):
+        return self.db[self.table].find_one()
+
+    def get_all(self):
+        return self.db[self.table].find()

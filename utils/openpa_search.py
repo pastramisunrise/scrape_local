@@ -1,13 +1,9 @@
-import requests
 import json
+import requests
 from utils.business import Business
+from utils.search import Search
 
-class Search():
-
-    def __init__(self, name, url):
-        self.name = name
-        self.url = url
-
+class OPA_Search(Search):
     def query_tables(self):
         print("{} search starting...".format(self.name))
         r = requests.get(self.url)
